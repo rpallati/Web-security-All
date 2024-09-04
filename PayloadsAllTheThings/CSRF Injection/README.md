@@ -184,6 +184,37 @@ Referer: https://attacker.com/csrf.html;trusted.domain.com
 Referer: https://trusted.domain.com.attacker.com/csrf.html
 ```
 
+Scenario:
+Imagine you have a web application where users can change their email address in their account settings. To change the email address, a user would normally submit a form like this:
+
+html
+Copy code
+<form action="https://example.com/change-email" method="POST">
+  <input type="email" name="email" value="user@example.com">
+  <input type="submit" value="Change Email">
+</form>
+When a user submits this form, the server processes the request and updates their email address.
+
+The CSRF Attack:
+Setup: An attacker creates a malicious website with a hidden form that submits a request to the vulnerable web application.
+
+Malicious Form: The attacker creates a form on their site that looks like this:
+
+html
+Copy code
+<form action="https://example.com/change-email" method="POST">
+  <input type="hidden" name="email" value="attacker@example.com">
+  <input type="submit" value="Submit">
+</form>
+Trick the User: The attacker then tricks a logged-in user into visiting their malicious site. For instance, the attacker might send the user an email with a link to their site.
+
+Automatic Submission: When the user visits the malicious site, the hidden form is automatically submitted (via JavaScript or some other method), sending a request to the web application to change the user's email address to the attacker's address.
+
+Why This Works:
+Authentication: Since the user is already authenticated on the legitimate web application, their session cookies are sent along with the request, making it look like a valid request from the user.
+
+No CSRF Token: If the web application doesn’t have CSRF protection mechanisms (like anti-CSRF tokens or SameSite cookies), it won’t be able to differentiate between a legitimate request and a forged one.
+
 
 ## Labs
 
